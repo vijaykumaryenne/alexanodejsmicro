@@ -1,0 +1,32 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: alexanodejsmicro-k8s-deployment
+spec:
+  selector:
+    matchLabels:
+      app: alexanodejsmicro
+  replicas: 1 # deployment runs 1 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: alexanodejsmicro
+    spec:
+      containers:
+      - name: alexanodejsmicro
+        image: vijaykumaryenne/alexanodejsmicro:latest
+        ports:
+        - containerPort: 5000 #Endpoint is at port 5000 in the container
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alexanodejsmicro-k8s-service
+spec:
+  type: NodePort #Exposes the service as a node port
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: alexanodejsmicro
